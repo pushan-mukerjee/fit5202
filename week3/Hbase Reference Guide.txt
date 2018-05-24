@@ -1,0 +1,1 @@
+https://hbase.apache.org/book.html#shell_exercises
