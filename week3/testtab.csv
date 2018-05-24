@@ -1,0 +1,4 @@
+Transaction_date,Product,Price,Payment_Type
+21/02/2018 12:48,Soap,1200,mastercard
+22/02/2018 13:49,Towel,800,visa
+23/02/2018 12:29,Milk,200,cash
