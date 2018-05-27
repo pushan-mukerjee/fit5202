@@ -1,0 +1,180 @@
+Pushan Mukerjee
+Student Number: 29052971
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+import org.apache.hadoop.hbase.filter.SingleColumnValueExcludeFilter
+Java::OrgApacheHadoopHbaseFilter::SingleColumnValueExcludeFilter
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+import org.apache.hadoop.hbase.filter.SingleColumnValueFilter
+Java::OrgApacheHadoopHbaseFilter::SingleColumnValueFilter
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+count 'insurance'
+Current count: 1000, row: 123323
+Current count: 2000, row: 148836
+Current count: 3000, row: 173666
+Current count: 4000, row: 198647
+Current count: 5000, row: 221684
+Current count: 6000, row: 245688
+Current count: 7000, row: 270406
+Current count: 8000, row: 294680
+Current count: 9000, row: 319201
+Current count: 10000, row: 343193
+Current count: 11000, row: 368784
+Current count: 12000, row: 394051
+Current count: 13000, row: 417943
+Current count: 14000, row: 441997
+Current count: 15000, row: 465646
+Current count: 16000, row: 490250
+Current count: 17000, row: 515383
+Current count: 18000, row: 540727
+Current count: 19000, row: 565470
+Current count: 20000, row: 589365
+Current count: 21000, row: 613188
+Current count: 22000, row: 637745
+Current count: 23000, row: 662039
+Current count: 24000, row: 687124
+Current count: 25000, row: 712542
+Current count: 26000, row: 737052
+Current count: 27000, row: 761711
+Current count: 28000, row: 786954
+Current count: 29000, row: 813036
+Current count: 30000, row: 838315
+Current count: 31000, row: 862377
+Current count: 32000, row: 885447
+Current count: 33000, row: 908980
+Current count: 34000, row: 933779
+Current count: 35000, row: 958684
+Current count: 36000, row: 984407
+36634 row(s) in 2.3100 seconds
+
+36634
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+put 'insurance', '100200', 'area_cf:statecode', 'NJ'
+0 row(s) in 0.2850 seconds
+
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+put 'insurance', '100200', 'area_cf:county', 'Bergen'
+0 row(s) in 0.3240 seconds
+
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+put 'insurance', '100200', 'policy_cf:eq_site_limit', '500000'
+0 row(s) in 0.3170 seconds
+
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+get 'insurance', '100200'
+COLUMN  CELL
+ area_cf:county timestamp=1527420729134, value=Bergen
+ area_cf:statecode timestamp=1527420723464, value=NJ
+ policy_cf:eq_site_limit timestamp=1527420734976, value=500000
+3 row(s) in 0.2970 seconds
+
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+put 'insurance', '100200', 'area_cf:county', 'Paramus'
+0 row(s) in 0.2470 seconds
+
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+get 'insurance', '100200'
+COLUMN  CELL
+ area_cf:county timestamp=1527420746205, value=Paramus
+ area_cf:statecode timestamp=1527420723464, value=NJ
+ policy_cf:eq_site_limit timestamp=1527420734976, value=500000
+3 row(s) in 0.2560 seconds
+
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+delete 'insurance', '100200', 'policy_cf:eq_site_limit'
+0 row(s) in 0.2410 seconds
+
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+deleteall 'insurance', '100200'
+0 row(s) in 0.2180 seconds
+
+HBase Shell; enter 'help<RETURN>' for list of supported commands.
+Type "exit<RETURN>" to leave the HBase Shell
+Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+
+scan 'insurance', {COLUMNS => ['policy_cf:hu_site_deductible'], FILTER => "SingleColumnValueFilter('policy_cf','hu_site_deductible',>,'binary:0') AND (SingleColumnValueFilter('policy_cf','construction',=,'substring:Masonry') OR SingleColumnValueFilter('policy_cf','construction',=,'substring:Wood'))"}
+ROW  COLUMN+CELL
+ 123950 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 156919 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 168616 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 173001 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 179291 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=2250
+ 180092 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=4500
+ 190017 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=9000
+ 219449 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 223216 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 225350 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 241639 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=2250
+ 248688 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 295554 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=2250
+ 338721 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 386789 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 398729 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=2250
+ 407297 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 414433 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=2250
+ 421545 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 434496 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 435277 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=4500
+ 453278 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 464083 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900000
+ 470285 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 486982 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 522495 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 523884 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 539319 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=2250
+ 540214 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 572910 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 598545 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=2250
+ 602833 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 603053 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 651577 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 674289 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 684881 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 696409 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 728317 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 738676 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 756352 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 893551 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 899774 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 918251 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=2250
+ 918599 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 923186 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 924196 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 924670 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 942613 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 947816 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+ 986489 column=policy_cf:hu_site_deductible, timestamp=1527388765974, value=900
+50 row(s) in 0.5400 seconds
+
