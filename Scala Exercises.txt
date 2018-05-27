@@ -1,0 +1,3 @@
+1- Write a Scala Script that calculates the sum of N! for N = 1..10
+2- Write a Scala Script that reads a CSV with two columns y and y^  (real-values)  and calculates RMSE
+3- Write a Scala Script that reads a CSV with two columns y and y^ (binary values) and calculates accuracy, precision, recall and F1-score. 
