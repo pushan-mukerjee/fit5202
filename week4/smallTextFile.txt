@@ -1,0 +1,14 @@
+hello this is a text file
+This is a very good item
+bad machine
+cache is good
+black is bad
+This is a very long line
+this is short line
+This is no good
+Very bad
+bowling not good
+bowling very bad
+this is a new line
+this is a newline of newfile
+
