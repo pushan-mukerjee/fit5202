@@ -1,0 +1,318 @@
+Spark context Web UI available at http://10.27.162.167:4041
+Spark context available as 'sc' (master = local[*], app id = local-1528613505449).
+Spark session available as 'spark'.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 2.2.1
+      /_/
+         
+Using Scala version 2.11.8 (OpenJDK 64-Bit Server VM, Java 1.8.0_171)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala> 
+
+scala> 
+
+scala> val df = spark.read.csv("iris.csv")
+df: org.apache.spark.sql.DataFrame = [_c0: string, _c1: string ... 3 more fields]
+
+scala> 
+
+scala> df.show()
++------------+-----------+------------+-----------+-------+
+|         _c0|        _c1|         _c2|        _c3|    _c4|
++------------+-----------+------------+-----------+-------+
+|sepal_length|sepal_width|petal_length|petal_width|species|
+|         5.1|        3.5|         1.4|        0.2| setosa|
+|         4.9|        3.0|         1.4|        0.2| setosa|
+|         4.7|        3.2|         1.3|        0.2| setosa|
+|         4.6|        3.1|         1.5|        0.2| setosa|
+|         5.0|        3.6|         1.4|        0.2| setosa|
+|         5.4|        3.9|         1.7|        0.4| setosa|
+|         4.6|        3.4|         1.4|        0.3| setosa|
+|         5.0|        3.4|         1.5|        0.2| setosa|
+|         4.4|        2.9|         1.4|        0.2| setosa|
+|         4.9|        3.1|         1.5|        0.1| setosa|
+|         5.4|        3.7|         1.5|        0.2| setosa|
+|         4.8|        3.4|         1.6|        0.2| setosa|
+|         4.8|        3.0|         1.4|        0.1| setosa|
+|         4.3|        3.0|         1.1|        0.1| setosa|
+|         5.8|        4.0|         1.2|        0.2| setosa|
+|         5.7|        4.4|         1.5|        0.4| setosa|
+|         5.4|        3.9|         1.3|        0.4| setosa|
+|         5.1|        3.5|         1.4|        0.3| setosa|
+|         5.7|        3.8|         1.7|        0.3| setosa|
++------------+-----------+------------+-----------+-------+
+only showing top 20 rows
+
+
+scala> 
+
+scala> df.count()
+res1: Long = 151
+
+scala> 
+
+scala> df.show(1)
++------------+-----------+------------+-----------+-------+
+|         _c0|        _c1|         _c2|        _c3|    _c4|
++------------+-----------+------------+-----------+-------+
+|sepal_length|sepal_width|petal_length|petal_width|species|
++------------+-----------+------------+-----------+-------+
+only showing top 1 row
+
+
+scala> 
+
+scala> df.show(10)
++------------+-----------+------------+-----------+-------+
+|         _c0|        _c1|         _c2|        _c3|    _c4|
++------------+-----------+------------+-----------+-------+
+|sepal_length|sepal_width|petal_length|petal_width|species|
+|         5.1|        3.5|         1.4|        0.2| setosa|
+|         4.9|        3.0|         1.4|        0.2| setosa|
+|         4.7|        3.2|         1.3|        0.2| setosa|
+|         4.6|        3.1|         1.5|        0.2| setosa|
+|         5.0|        3.6|         1.4|        0.2| setosa|
+|         5.4|        3.9|         1.7|        0.4| setosa|
+|         4.6|        3.4|         1.4|        0.3| setosa|
+|         5.0|        3.4|         1.5|        0.2| setosa|
+|         4.4|        2.9|         1.4|        0.2| setosa|
++------------+-----------+------------+-----------+-------+
+only showing top 10 rows
+
+
+scala> 
+
+scala> df.describe()
+res4: org.apache.spark.sql.DataFrame = [summary: string, _c0: string ... 4 more fields]
+
+scala> df.columns()
+<console>:26: error: not enough arguments for method apply: (i: Int)String in class Array.
+Unspecified value parameter i.
+       df.columns()
+                 ^
+
+scala> 
+
+scala> df.select("sepal_length").collect().map(_(0)).toList
+org.apache.spark.sql.AnalysisException: cannot resolve '`sepal_length`' given input columns: [_c1, _c2, _c3, _c0, _c4];;
+'Project ['sepal_length]
++- Relation[_c0#12,_c1#13,_c2#14,_c3#15,_c4#16] csv
+
+  at org.apache.spark.sql.catalyst.analysis.package$AnalysisErrorAt.failAnalysis(package.scala:42)
+  at org.apache.spark.sql.catalyst.analysis.CheckAnalysis$$anonfun$checkAnalysis$1$$anonfun$apply$2.applyOrElse(CheckAnalysis.scala:88)
+  at org.apache.spark.sql.catalyst.analysis.CheckAnalysis$$anonfun$checkAnalysis$1$$anonfun$apply$2.applyOrElse(CheckAnalysis.scala:85)
+  at org.apache.spark.sql.catalyst.trees.TreeNode$$anonfun$transformUp$1.apply(TreeNode.scala:289)
+  at org.apache.spark.sql.catalyst.trees.TreeNode$$anonfun$transformUp$1.apply(TreeNode.scala:289)
+  at org.apache.spark.sql.catalyst.trees.CurrentOrigin$.withOrigin(TreeNode.scala:70)
+  at org.apache.spark.sql.catalyst.trees.TreeNode.transformUp(TreeNode.scala:288)
+  at org.apache.spark.sql.catalyst.plans.QueryPlan$$anonfun$transformExpressionsUp$1.apply(QueryPlan.scala:268)
+  at org.apache.spark.sql.catalyst.plans.QueryPlan$$anonfun$transformExpressionsUp$1.apply(QueryPlan.scala:268)
+  at org.apache.spark.sql.catalyst.plans.QueryPlan.transformExpression$1(QueryPlan.scala:279)
+  at org.apache.spark.sql.catalyst.plans.QueryPlan.org$apache$spark$sql$catalyst$plans$QueryPlan$$recursiveTransform$1(QueryPlan.scala:289)
+  at org.apache.spark.sql.catalyst.plans.QueryPlan$$anonfun$org$apache$spark$sql$catalyst$plans$QueryPlan$$recursiveTransform$1$1.apply(QueryPlan.scala:293)
+  at scala.collection.TraversableLike$$anonfun$map$1.apply(TraversableLike.scala:234)
+  at scala.collection.TraversableLike$$anonfun$map$1.apply(TraversableLike.scala:234)
+  at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)
+  at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)
+  at scala.collection.TraversableLike$class.map(TraversableLike.scala:234)
+  at scala.collection.AbstractTraversable.map(Traversable.scala:104)
+  at org.apache.spark.sql.catalyst.plans.QueryPlan.org$apache$spark$sql$catalyst$plans$QueryPlan$$recursiveTransform$1(QueryPlan.scala:293)
+  at org.apache.spark.sql.catalyst.plans.QueryPlan$$anonfun$6.apply(QueryPlan.scala:298)
+  at org.apache.spark.sql.catalyst.trees.TreeNode.mapProductIterator(TreeNode.scala:187)
+  at org.apache.spark.sql.catalyst.plans.QueryPlan.mapExpressions(QueryPlan.scala:298)
+  at org.apache.spark.sql.catalyst.plans.QueryPlan.transformExpressionsUp(QueryPlan.scala:268)
+  at org.apache.spark.sql.catalyst.analysis.CheckAnalysis$$anonfun$checkAnalysis$1.apply(CheckAnalysis.scala:85)
+  at org.apache.spark.sql.catalyst.analysis.CheckAnalysis$$anonfun$checkAnalysis$1.apply(CheckAnalysis.scala:78)
+  at org.apache.spark.sql.catalyst.trees.TreeNode.foreachUp(TreeNode.scala:127)
+  at org.apache.spark.sql.catalyst.analysis.CheckAnalysis$class.checkAnalysis(CheckAnalysis.scala:78)
+  at org.apache.spark.sql.catalyst.analysis.Analyzer.checkAnalysis(Analyzer.scala:91)
+  at org.apache.spark.sql.execution.QueryExecution.assertAnalyzed(QueryExecution.scala:52)
+  at org.apache.spark.sql.Dataset$.ofRows(Dataset.scala:67)
+  at org.apache.spark.sql.Dataset.org$apache$spark$sql$Dataset$$withPlan(Dataset.scala:2884)
+  at org.apache.spark.sql.Dataset.select(Dataset.scala:1150)
+  at org.apache.spark.sql.Dataset.select(Dataset.scala:1168)
+  ... 48 elided
+
+scala> 
+
+scala> df.printSchema()
+root
+ |-- _c0: string (nullable = true)
+ |-- _c1: string (nullable = true)
+ |-- _c2: string (nullable = true)
+ |-- _c3: string (nullable = true)
+ |-- _c4: string (nullable = true)
+
+
+scala> 
+
+scala> df.foreach(row => println(row.get(2)))
+petal_length
+1.4
+1.4
+1.3
+1.5
+1.4
+1.7
+1.4
+1.5
+1.4
+1.5
+1.5
+1.6
+1.4
+1.1
+1.2
+1.5
+1.3
+1.4
+1.7
+1.5
+1.7
+1.5
+1.0
+1.7
+1.9
+1.6
+1.6
+1.5
+1.4
+1.6
+1.6
+1.5
+1.5
+1.4
+1.5
+1.2
+1.3
+1.5
+1.3
+1.5
+1.3
+1.3
+1.3
+1.6
+1.9
+1.4
+1.6
+1.4
+1.5
+1.4
+4.7
+4.5
+4.9
+4.0
+4.6
+4.5
+4.7
+3.3
+4.6
+3.9
+3.5
+4.2
+4.0
+4.7
+3.6
+4.4
+4.5
+4.1
+4.5
+3.9
+4.8
+4.0
+4.9
+4.7
+4.3
+4.4
+4.8
+5.0
+4.5
+3.5
+3.8
+3.7
+3.9
+5.1
+4.5
+4.5
+4.7
+4.4
+4.1
+4.0
+4.4
+4.6
+4.0
+3.3
+4.2
+4.2
+4.2
+4.3
+3.0
+4.1
+6.0
+5.1
+5.9
+5.6
+5.8
+6.6
+4.5
+6.3
+5.8
+6.1
+5.1
+5.3
+5.5
+5.0
+5.1
+5.3
+5.5
+6.7
+6.9
+5.0
+5.7
+4.9
+6.7
+4.9
+5.7
+6.0
+4.8
+4.9
+5.6
+5.8
+6.1
+6.4
+5.6
+5.1
+5.6
+6.1
+5.6
+5.5
+4.8
+5.4
+5.6
+5.1
+5.1
+5.9
+5.7
+5.2
+5.0
+5.2
+5.4
+5.1
+
+scala> 
+
+scala> df.filter($"_c0" < 5).map(row => println(row.get(0)))
+<console>:26: error: Unable to find encoder for type stored in a Dataset.  Primitive types (Int, String, etc) and Product types (case classes) are supported by importing spark.implicits._  Support for serializing other types will be added in future releases.
+       df.filter($"_c0" < 5).map(row => println(row.get(0)))
+                                ^
+
+scala> 
+
+scala> 
+
+scala> :quit

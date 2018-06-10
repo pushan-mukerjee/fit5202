@@ -1,0 +1,369 @@
+Student Name: Pushan Mukerjee
+Student Number: 29052971
+Spark context Web UI available at http://10.27.162.167:4041
+Spark context available as 'sc' (master = local[*], app id = local-1528608872515).
+Spark session available as 'spark'.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 2.2.1
+      /_/
+         
+Using Scala version 2.11.8 (OpenJDK 64-Bit Server VM, Java 1.8.0_171)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala> 
+
+scala> 
+
+scala> /* creating the bigText file from source */
+     | 
+     | val bigText = sc.textFile("big.txt")
+bigText: org.apache.spark.rdd.RDD[String] = big.txt MapPartitionsRDD[1] at textFile at <console>:26
+
+scala> 
+
+scala> /* getting word count */
+     | /* splits lines on white space to get words */
+     | /* replaces punctuation with blank, trims whitespace, converts lower-case  */
+     | /* filters out empty words and only matches alphanumeric characters */
+     | 
+     | val wcount = bigText.flatMap(line => line.split("\\W+")).map(_.replaceAll ("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).filter (word => !word.isEmpty && word.matches("[A-Za-z]+")).map(word => (word,1)).reduc eByKey(_+_)
+wcount: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[6] at reduceByKey at <console>:31
+
+scala> 
+
+scala> /* determines 10 most frequent words */
+     | 
+     | wcount.sortBy(_._2, ascending=false).take(10)
+res9: Array[(String, Int)] = Array((the,80028), (of,40022), (and,38310), (to,28762), (in,22040), (a,21150), (that,12507), (he,12396), (was,11409), (it,10678))
+
+scala> 
+
+scala> /* Sorting words by Alphabetical order and listing first 30 */
+     | 
+     | wcount.sortByKey().take(30)
+res12: Array[(String, Int)] = Array((a,21150), (aah,1), (aaron,4), (ab,1), (aback,3), (abacus,1), (abandon,30), (abandoned,71), (abandoning,26), (abandonment,14), (abandons,2), (abasement,1), (abashed,13), (abate,5), (abatement,2), (abbe,19), (abbot,1), (abbots,1), (abbott,5), (abbreviations,1), (abc,1), (abdicate,1), (abdicated,1), (abdomen,22), (abdomens,2), (abdominal,47), (abduct,3), (abducted,4), (abducting,2), (abduction,10))
+
+scala> 
+
+scala> /* Sorting by reverse alphabetical order and listing first 30 */
+     | 
+     | wcount.sortByKey(false).take(30) 
+res15: Array[(String, Int)] = Array((zygomatic,1), (zygoma,1), (zweck,1), (zum,1), (zueblin,1), (zubovski,2), (zubova,3), (zubov,2), (zu,2), (zoology,3), (zone,24), (znamenka,1), (znaim,16), (zis,1), (zip,4), (zinc,4), (zinaida,1), (zikin,1), (zigzag,2), (zides,1), (zhilinski,8), (zherkov,40), (zheg,4), (zharov,1), (zest,3), (zero,5), (zere,1), (zenith,1), (zenger,3), (zen,1))
+
+scala> 
+
+scala> /* Filtering Stopwords */
+     | 
+     | val stopWords = Set("the", "of", "and", "to", "in", "a", "he", "that", "w as", "his")
+stopWords: scala.collection.immutable.Set[String] = Set(in, his, a, that, to, was, he, of, and, the)
+
+scala> 
+
+scala> val wcountNoStop = bigText.flatMap(line => line.split("\\s")).map(_.repla ceAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).f ilter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWo rds.contains(word)).map(word => (word,1)).reduceByKey(_+_)
+wcountNoStop: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[23] at reduceByKey at <console>:28
+
+scala> 
+
+scala> /* 10 most frequent words after filtering stopwords */
+     | 
+     | wcountNoStop.sortBy(_._2, ascending=false).take(10)
+res20: Array[(String, Int)] = Array((with,9667), (is,9561), (it,9511), (as,7897), (had,7351), (for,6739), (at,6723), (by,6634), (on,6501), (not,6477))
+
+scala> 
+
+scala> /* Total Word Count */
+     | 
+     | /* initialises accumulator */
+     | val accum = sc.longAccumulator("myAccum")
+accum: org.apache.spark.util.LongAccumulator = LongAccumulator(id: 360, name: Some(myAccum), value: 0)
+
+scala> 
+
+scala> /* transforms word cnt into an array of counts */
+     | 
+     | val wordCountArray = wcountNoStop.map(wordcnt => wordcnt._2).collect.toAr ray
+wordCountArray: Array[Int] = Array(9, 3, 9, 145, 7, 576, 1, 9, 1, 7, 4, 3, 2591, 4, 5, 34, 1, 25, 35, 2, 3, 8, 2, 1, 2, 3, 2, 19, 3, 3, 2, 3, 2, 74, 1, 9, 62, 10, 1, 6, 1, 1, 3, 2, 2, 2, 3, 13, 1, 13, 1, 1, 127, 14, 11, 25, 1, 2, 1, 1, 17, 1, 6, 1, 5, 1, 2, 20, 35, 2, 6, 17, 2, 2, 8, 1, 2, 4, 1, 7, 2, 5, 17, 34, 2, 1, 1, 1, 4, 202, 1, 3, 5, 3, 3, 1, 2, 1, 4, 1, 8, 6, 13, 12, 1, 37, 273, 630, 1, 7, 1, 5, 2, 15, 1, 18, 3, 27, 4, 1, 2, 17, 48, 1, 800, 11, 2, 1, 267, 10, 2, 5, 1, 2, 6, 19, 6, 10, 20, 5, 2, 2, 2, 3, 1, 24, 7, 6, 1, 55, 1, 2, 1, 1, 1, 1, 23, 1, 3, 3, 2, 1, 1, 5, 3, 17, 7, 40, 3, 974, 18, 14, 138, 4, 1, 14, 29, 1, 2, 32, 2, 2, 5, 45, 1, 2, 1, 4, 12, 3, 2, 1, 34, 3, 2, 1, 26, 2, 2, 1, 9, 36, 4, 9, 1, 5, 12, 2, 2, 10, 117, 15, 1, 11, 1, 1, 1, 3, 25, 2, 2, 77, 1, 1, 1, 2, 23, 3, ...
+scala> 
+
+scala> /* adds each word count in the array to the accumulator */
+     | 
+     | val totalWordCount = wordCountArray.foreach(count => accum.add(count)) 
+totalWordCount: Unit = ()
+
+scala> 
+
+scala> /* Returns total words which value of the accumulator */
+     | 
+     | accum.value
+res30: Long = 759426
+
+scala> 
+
+scala> /* shorter form of word count with stopwords */
+     | 
+     | val word_cnt = bigText.flatMap(line => line.split("\\W+")).map(_.replaceA ll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).filt er(word => !word.isEmpty && word.matches("[A-Za-z]+")).map(word => (word,1)).cou nt
+word_cnt: Long = 1088489
+
+scala> 
+
+scala> /* shorter form of word count without stopwords */
+     | 
+     | val wcountNoStop = bigText.flatMap(line => line.split("\\W+")).map(_.repl aceAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase). filter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopW ords.contains(word)).map(word => (word,1)).count
+wcountNoStop: Long = 811834
+
+scala> 
+
+scala> /* length of the longest word */
+     | 
+     | /* Using wcountNoStop RDD (key, wordcnt) after reduceByKey */
+     | 
+     | val wcountNoStop = bigText.flatMap(line => line.split("\\W+")).map(_.repl aceAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase). filter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopW ords.contains(word)).map(word => (word,1)).reduceByKey(_+_).map(_._1.length).max 
+wcountNoStop: Int = 18
+
+scala> 
+
+scala> /* val maxWordLength = wcountNoStop.map(x => x._1.length).max */
+     | 
+     | val maxWordLength = bigText.flatMap(line => line.split("\\W+")).map(_.rep laceAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase) .filter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stop Words.contains(word)).map(_.length).max
+maxWordLength: Int = 18
+
+scala> 
+
+scala> /* length of the shortest word */
+     | 
+     | val wcountNoStop = bigText.flatMap(line => line.split("\\s")).map(_.repla ceAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).f ilter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWo rds.contains(word)).map(_.length).min
+wcountNoStop: Int = 1
+
+scala> 
+
+scala> /* Number of partitions of big.txt */
+     | 
+     | val numPartitions = bigText.getNumPartitions
+numPartitions: Int = 2
+
+scala> 
+
+scala> /* Change number of partitions */
+     | val numPartitions = bigText.repartition(5).getNumPartitions 
+numPartitions: Int = 5
+
+scala> 
+
+scala> /* How many lines or items stored in big text */ 
+     | 
+     | val numLines = bigText.count
+numLines: Long = 121706
+
+scala> 
+
+scala> /* Print the Lines/Items */
+     | 
+     | bigText.collect
+res50: Array[String] = Array(The Project Gutenberg EBook of The Adventures of Sherlock Holmes, by Sir Arthur Conan Doyle, (#15 in our series by Sir Arthur Conan Doyle), "", Copyright laws are changing all over the world. Be sure to check the, copyright laws for your country before downloading or redistributing, this or any other Project Gutenberg eBook., "", This header should be the first thing seen when viewing this Project, Gutenberg file.  Please do not remove it.  Do not change or edit the, header without written permission., "", Please read the "legal small print," and other information about the, eBook and Project Gutenberg at the bottom of this file.  Included is, important information about your specific rights and restrictions in, how the file may be used.  You can also find o...
+scala> 
+
+scala> /* Print the first 10 lines */
+     | 
+     | bigText.take(10)
+res53: Array[String] = Array(The Project Gutenberg EBook of The Adventures of Sherlock Holmes, by Sir Arthur Conan Doyle, (#15 in our series by Sir Arthur Conan Doyle), "", Copyright laws are changing all over the world. Be sure to check the, copyright laws for your country before downloading or redistributing, this or any other Project Gutenberg eBook., "", This header should be the first thing seen when viewing this Project, Gutenberg file.  Please do not remove it.  Do not change or edit the)
+
+scala> 
+
+scala> /* Count the number of words */
+     | 
+     | val numWords = bigText.flatMap(line => line.split("\\W+")).map(_.replaceA ll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).filt er(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWords .contains(word)).count
+numWords: Long = 811834
+
+scala> 
+
+scala> /* Print the first word */
+     | 
+     | val firstWord = bigText.flatMap(line => line.split("\\W+")).map(_.replace All("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).fil ter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWord s.contains(word)).first()
+firstWord: String = project
+
+scala> 
+
+scala> /* Print the first 10 words */
+     | 
+     | val first10 = bigText.flatMap(line => line.split("\\W+")).map(_.replaceAl l("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).filte r(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWords. contains(word)).take(10)
+first10: Array[String] = Array(project, gutenberg, ebook, adventures, sherlock, holmes, by, sir, arthur, conan)
+
+scala> 
+
+scala> /* Print 10 random samples */
+     | 
+     | val samples = bigText.flatMap(line => line.split("\\W+")).map(_.replaceAl l("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).filte r(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWords. contains(word)).takeSample(false, 10).foreach(println)
+obtain
+before
+angrily
+are
+be
+into
+by
+moment
+as
+produce
+samples: Unit = ()
+
+scala> 
+
+scala> /* Sample 50% of the words */
+     | 
+     | /* val samples = bigText.flatMap(line => line.split("\\W+")).map(_.replac eAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).fi lter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWor ds.contains(word)).sample(false, 0.5).foreach(println) */
+     | 
+     | /* How many lines in the file */
+     | 
+     | val numLines = bigText.map(line => line).count
+numLines: Long = 121706
+
+scala> 
+
+scala> /* how many lines have an asterix */
+     | 
+     | val numAsterix = bigText.filter(line => line.contains("*")).count 
+numAsterix: Long = 326
+
+scala> 
+
+scala> /* how many lines have the text 'and' */
+     | 
+     | val firstWord = bigText.filter(line => line.contains("and")).count
+firstWord: Long = 35080
+
+scala> 
+
+scala> /* how many lines contain the distinct word and */
+     | 
+     | val numAnds = bigText.map(_.split("\\W+")).filter(_.contains("and")).coun t
+numAnds: Long = 31353
+
+scala> 
+
+scala> /* how many blank lines */
+     | 
+     | val numBlankLines = bigText.filter(_.length == 0).count
+numBlankLines: Long = 24636
+
+scala> 
+
+scala> /* get the lines which are not blank */
+     | val nonBlankLines = bigText.filter(_.length != 0).map(line => line.split( "\\W+")).collect
+nonBlankLines: Array[Array[String]] = Array(Array(The, Project, Gutenberg, EBook, of, The, Adventures, of, Sherlock, Holmes), Array(by, Sir, Arthur, Conan, Doyle), Array("", 15, in, our, series, by, Sir, Arthur, Conan, Doyle), Array(Copyright, laws, are, changing, all, over, the, world, Be, sure, to, check, the), Array(copyright, laws, for, your, country, before, downloading, or, redistributing), Array(this, or, any, other, Project, Gutenberg, eBook), Array(This, header, should, be, the, first, thing, seen, when, viewing, this, Project), Array(Gutenberg, file, Please, do, not, remove, it, Do, not, change, or, edit, the), Array(header, without, written, permission), Array(Please, read, the, legal, small, print, and, other, information, about, the), Array(eBook, and, Project, Gutenberg, a...
+scala> 
+
+scala> /* get words from the textfile and skip the blank lines */
+     | val wordsSkipBlankLines = bigText.filter(_.length != 0).flatMap(line => l ine.split("\\W+")).take(10)
+wordsSkipBlankLines: Array[String] = Array(The, Project, Gutenberg, EBook, of, The, Adventures, of, Sherlock, Holmes)
+
+scala> 
+
+scala> 
+
+scala> /* Length of longest line ie. number of words of longest line */
+     | 
+     | val longestLine = bigText.map(_.split(" ").length).max
+longestLine: Int = 465
+
+scala> 
+
+scala> /* Frequency of each word */
+     | 
+     | val wordFreq = bigText.flatMap(line => line.split("\\W+")).map(_.replaceA ll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).filt er(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWords .contains(word)).map(word => (word,1)).reduceByKey(_+_).collect
+wordFreq: Array[(String, Int)] = Array((integument,9), (mattered,3), (intimately,10), (bolkonski,178), (reunion,7), (bone,623), (harmonies,1), (blandly,9), (wobbers,1), (transfusion,7), (gaping,5), (hem,3), (been,2598), (fuller,11), (pig,7), (accomplished,38), (jove,2), (crying,26), (breath,36), (belleau,2), (clients,3), (contemptible,8), (swain,2), (liebchen,1), (fowl,2), (husky,3), (birchbark,1), (ukrainian,2), (afterward,19), (immobilisation,3), (ignore,3), (eventuality,2), (supporter,3), (pacifying,2), (tuberculosis,77), (inquisition,1), (loyalists,10), (stern,64), (luminous,10), (snuffing,1), (espoused,6), (seductive,1), (burghers,1), (audibly,3), (coated,2), (hygienic,2), (dentition,2), (balk,3), (erected,13), (steaminess,1), (dangers,14), (tracheal,2), (historians,128), (descendi...
+scala> 
+
+scala> /* Frequency of each word sorted alphabetically */
+     | 
+     | val wordFreq = bigText.flatMap(line => line.split("\\W+")).map(_.replaceA ll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).filt er(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWords .contains(word)).map(word => (word,1)).reduceByKey(_+_).sortByKey().collect 
+wordFreq: Array[(String, Int)] = Array((aah,1), (aaron,4), (ab,1), (aback,3), (abacus,1), (abandon,30), (abandoned,71), (abandoning,26), (abandonment,14), (abandons,2), (abasement,1), (abashed,13), (abate,5), (abatement,2), (abbe,19), (abbot,1), (abbots,1), (abbott,5), (abbreviations,1), (abc,1), (abdicate,1), (abdicated,1), (abdomen,22), (abdomens,2), (abdominal,47), (abduct,3), (abducted,4), (abducting,2), (abduction,10), (abductor,4), (abductors,1), (abe,2), (aberdeen,2), (abettors,2), (abeyance,1), (abhor,1), (abhorrence,1), (abhorrent,1), (abide,5), (abiding,2), (abigail,3), (abilities,1), (ability,12), (abjure,1), (ablaze,4), (able,199), (ablest,1), (ably,1), (abnegation,2), (abnormal,26), (abnormality,2), (abnormally,10), (abode,1), (abodes,1), (abolish,8), (abolished,24), (aboli...
+scala> 
+
+scala> /* Frequency of each word sorted by greatest freq to least freq, print to p 10 */
+     | 
+     | val wordFreq = bigText.flatMap(line => line.split("\\W+")).map(_.replaceA ll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).filt er(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWords .contains(word)).map(word => (word,1)).reduceByKey(_+_).sortBy(_._2,ascending=fa lse).take(10).foreach(println)
+(it,10678)
+(is,9773)
+(with,9738)
+(as,8059)
+(i,7676)
+(had,7382)
+(for,6935)
+(at,6789)
+(by,6735)
+(on,6640)
+wordFreq: Unit = ()
+
+scala> 
+
+scala> /* Longest word */
+     | 
+     | val wordLength = bigText.flatMap(line => line.split("\\W+")).map(_.replac eAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).fi lter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWor ds.contains(word)).map(word => (word, word.length)).groupBy(_._2).max
+wordLength: (Int, Iterable[(String, Int)]) = (18,CompactBuffer((disproportionately,18), (supersensitiveness,18), (supersensitiveness,18), (characteristically,18), (characteristically,18), (disproportionately,18), (characteristically,18), (characteristically,18), (characteristically,18), (characteristically,18)))
+
+scala> 
+
+scala> /* length of each word, sorted alphabetically */
+     | 
+     | val wordLength = bigText.flatMap(line => line.split("\\W+")).map(_.replac eAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).fi lter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWor ds.contains(word)).map(word => (word,word.length)).sortBy(_._1).take(10)
+wordLength: Array[(String, Int)] = Array((aah,3), (aaron,5), (aaron,5), (aaron,5), (aaron,5), (ab,2), (aback,5), (aback,5), (aback,5), (abacus,6))
+
+scala> 
+
+scala> 
+
+scala> /* length of each word, sorted by length desc, top 10 longest words*/
+     | 
+     | val wordLength = bigText.flatMap(line => line.split("\\W+")).map(_.replac eAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).fi lter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopWor ds.contains(word)).map(word => (word,word.length)).sortBy(_._2,ascending=false). take(10)
+wordLength: Array[(String, Int)] = Array((disproportionately,18), (supersensitiveness,18), (supersensitiveness,18), (characteristically,18), (characteristically,18), (disproportionately,18), (characteristically,18), (characteristically,18), (characteristically,18), (characteristically,18))
+
+scala> 
+
+scala> /* Number of unique words */
+     | 
+     | val numUniqueWords = bigText.flatMap(line => line.split("\\W+")).map(_.re placeAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase ).filter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !sto pWords.contains(word)).distinct.count
+numUniqueWords: Long = 27934
+
+scala> 
+
+scala> /* Filter out words starting with 'a' */
+     | 
+     | val numUniqueWords = bigText.flatMap(line => line.split("\\W+")).map(_.re placeAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase ).filter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !sto pWords.contains(word)).filter(word => !word.matches("^a(.*)$")).map(word => (wor d,1)).reduceByKey(_+_).sortBy(_._1).take(10)
+numUniqueWords: Array[(String, Int)] = Array((b,84), (ba,2), (babcock,2), (babe,1), (babel,1), (babes,1), (babies,3), (babinski,1), (baboon,4), (baby,43))
+
+scala> 
+
+scala> /* Find all words with length <=4 and add to stopwords */
+     | 
+     | val stopWords = bigText.flatMap(line => line.split("\\W+")).map(_.replace All("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase).fil ter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => word.leng th <4).distinct.collect.toSet
+stopWords: scala.collection.immutable.Set[String] = Set(ebb, htm, est, irs, ftp, ze, eye, ouh, e, wm, se, ku, rub, beg, bow, mb, pre, le, rod, eau, pas, mio, des, for, erb, st, fez, awl, s, ugh, art, tss, jew, dye, x, und, sal, due, any, neo, win, du, cox, bye, rid, tit, dix, ba, in, ned, ida, ta, ar, lay, off, peg, fr, are, is, vex, mon, ho, sip, his, oh, why, god, xiv, sly, keg, rum, tie, too, ev, bay, dam, nut, hem, grs, sot, nez, abc, bit, try, fe, dy, boa, got, lax, ram, dad, am, elm, jaw, mt, n, vos, mob, cow, esq, bog, oe, zip, zis, bag, tu, sit, ana, icy, xx, odd, thy, yes, fir, rye, but, nip, map, qui, co, hur, pop, ed, tea, dum, dio, toi, dip, par, sea, si, wax, rag, aid, j, ist, y, if, tax, pa, ga, jot, oct, bal, big, own, bet, tag, rim, das, lid, up, ogg, tt, rut, etc, tra, ...
+scala> 
+
+scala> /* val broadcastStopWords = sc.broadcast(stopWords.collect.toSet) */
+     | 
+     | stopWords.take(20)
+res100: scala.collection.immutable.Set[String] = Set(ebb, htm, est, irs, ftp, ze, eye, ouh, e, wm, se, ku, rub, beg, bow, mb, pre, le, rod, eau)
+
+scala> 
+
+scala> /* Filter out the stopwords */
+     | 
+     | val wcountNoStop = bigText.flatMap(line => line.split("\\W+")).map(_.repl aceAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase). filter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !stopW ords.contains(word)).map(word => (word,1)).reduceByKey(_+_).collect()
+wcountNoStop: Array[(String, Int)] = Array((integument,9), (mattered,3), (intimately,10), (bolkonski,178), (reunion,7), (bone,623), (harmonies,1), (blandly,9), (wobbers,1), (transfusion,7), (gaping,5), (been,2598), (fuller,11), (accomplished,38), (ukrainian,2), (jove,2), (crying,26), (breath,36), (belleau,2), (clients,3), (contemptible,8), (swain,2), (liebchen,1), (fowl,2), (husky,3), (birchbark,1), (afterward,19), (immobilisation,3), (ignore,3), (eventuality,2), (supporter,3), (pacifying,2), (tuberculosis,77), (inquisition,1), (loyalists,10), (stern,64), (luminous,10), (snuffing,1), (espoused,6), (seductive,1), (burghers,1), (audibly,3), (coated,2), (hygienic,2), (dentition,2), (balk,3), (erected,13), (steaminess,1), (dangers,14), (tracheal,2), (historians,128), (descending,15), (seven...
+scala> 
+
+scala> /* Search how many times the word 'adventure' appears */ 
+     | 
+     | val wordFreqSearch = bigText.flatMap(line => line.split("\\W+")).map(_.re placeAll("[{~,!,@,#,$,%,^,&,*,(,),_,=,-,`,:,',?,/,<,>,.}]", "").trim.toLowerCase ).filter(word => !word.isEmpty && word.matches("[A-Za-z]+")).filter(word => !sto pWords.contains(word)).map(word => (word,1)).reduceByKey(_+_).filter(_._1 == "ad venture").collect
+wordFreqSearch: Array[(String, Int)] = Array((adventure,32))
+
+scala> 
+
+scala> 
+
+scala> 
+
+scala> :quit
