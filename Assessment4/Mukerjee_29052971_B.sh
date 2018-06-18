@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #removing the csv directories created by PARTB if they exist
-bash -c '[ -d 29052971_B_1.csv ] && rm -r 29052971_B_1.csv'
-bash -c '[ -d 29052971_B_2.csv ] && rm -r 29052971_B_2.csv'
-bash -c '[ -d 29052971_B_3.csv ] && rm -r 29052971_B_3.csv'
-bash -c '[ -d 29052971_B_4.csv ] && rm -r 29052971_B_4.csv'
+bash -c '[ -d /tmp/29052971/29052971_B_1.csv ] && /tmp/29052971/rm -r 29052971_B_1.csv'
+bash -c '[ -d 29052971_B_2.csv ] && rm -r /tmp/29052971/29052971_B_2.csv'
+bash -c '[ -d 29052971_B_3.csv ] && rm -r /tmp/29052971/29052971_B_3.csv'
+bash -c '[ -d 29052971_B_4.csv ] && rm -r /tmp/29052971/29052971_B_4.csv'
 
 echo "
 
@@ -38,7 +38,7 @@ val start = 10 //lower bound for random number generator
 val end = 99 //upper bound for random number generator
 
 //generates 100 random numbers between start and end
-val pwText = new PrintWriter( new File(\"stream_\" + n + \".txt\"))
+val pwText = new PrintWriter( new File(\"/tmp/29052971/stream_\" + n + \".txt\"))
 val stream = Seq.fill(100)(start + r.nextInt( (end - start) + 1))
 stream.size
 val line = stream.mkString(\",\")
@@ -62,7 +62,7 @@ val ssc = new StreamingContext(conf, Seconds(fileInterval))
 */
 
 //loading the stream data in the text file containing 2 dimensional digits 
-val streamData = sc.textFile(\"stream.txt\")
+val streamData = sc.textFile(\"/tmp/29052971/stream.txt\")
 
 //parsing the stream data in the text file into a Vector
 //(each item is mapped to a Double)
@@ -97,8 +97,8 @@ def time[R](block: => R): R = {
           result
 }
 
-//Load the test.csv.bz dataset from /home/user/Documents/Datasets/test.csv.bz2
-val df = spark.read.option(\"header\", \"false\").csv(\"/home/user/Documents/Datasets/test.csv.bz2\")
+//Load the test.csv.bz dataset from /tmp/29052971/test.csv.bz2
+val df = spark.read.option(\"header\", \"false\").csv(\"/tmp/29052971/test.csv.bz2\")
 
 //print the dataset columns
 df.printSchema()
@@ -198,7 +198,7 @@ val topTenBusiestAirports = graph.triplets.map(triplet => (triplet.srcAttr, trip
 time{topTenBusiestAirports.take(10)}
 
 //print to csv
-val topTenBusiestAirportsDf = sc.parallelize(topTenBusiestAirports).toDF(\"Airport\",\"TotalFlights\").coalesce(1).write.format(\"com.databricks.spark.csv\").option(\"header\", \"true\").save(\"29052971_B_1.csv\")
+val topTenBusiestAirportsDf = sc.parallelize(topTenBusiestAirports).toDF(\"Airport\",\"TotalFlights\").coalesce(1).write.format(\"com.databricks.spark.csv\").option(\"header\", \"true\").save(\"/tmp/29052971/29052971_B_1.csv\")
 
 /* Q2. Top 10 Longest Airline Routes */
 println(\"Q2. Top 10 Longest Airline Routes\")
@@ -211,7 +211,7 @@ val topTenLongestRoutes = graph.triplets.map(triplet => (triplet.srcAttr, triple
 time{topTenLongestRoutes.take(10)}
 
 //print to csv
-val topTenLongestRoutesDf = sc.parallelize(topTenLongestRoutes).toDF(\"OriginAirport\",\"DestinationAirport\",\"AvgAirTime\").coalesce(1).write.format(\"com.databricks.spark.csv\").option(\"header\", \"true\").save(\"29052971_B_2.csv\")
+val topTenLongestRoutesDf = sc.parallelize(topTenLongestRoutes).toDF(\"OriginAirport\",\"DestinationAirport\",\"AvgAirTime\").coalesce(1).write.format(\"com.databricks.spark.csv\").option(\"header\", \"true\").save(\"/tmp/29052971/29052971_B_2.csv\")
 
 
 /* Q3. Top 10 Worst Routes based on longest Average Arrival Delay */
@@ -225,7 +225,7 @@ val topTenWorstRoutes = graph.triplets.map(triplet => (triplet.srcAttr, triplet.
 time{topTenWorstRoutes.take(10)}
 
 //print to csv
-val topTenWorstRoutesDf = sc.parallelize(topTenWorstRoutes).toDF(\"OriginAirport\",\"DestinationAirport\",\"AvgArrivalDelay\").coalesce(1).write.format(\"com.databricks.spark.csv\").option(\"header\", \"true\").save(\"29052971_B_3.csv\")
+val topTenWorstRoutesDf = sc.parallelize(topTenWorstRoutes).toDF(\"OriginAirport\",\"DestinationAirport\",\"AvgArrivalDelay\").coalesce(1).write.format(\"com.databricks.spark.csv\").option(\"header\", \"true\").save(\"/tmp/29052971/29052971_B_3.csv\")
 
 
 /* Q4. Top 10 Worst Airports based on longest Average Departure Delay */
@@ -247,7 +247,7 @@ val topTenWorstAirports = numDepartureRoutes.join(sumAvgDepDelay).map(x => (x._1
 time{topTenWorstAirports.take(10)}
 
 //print to csv
-val topTenWorstAirportsDf = sc.parallelize(topTenWorstAirports).toDF(\"OriginAirport\",\"AvgDepartureDelay\").coalesce(1).write.format(\"com.databricks.spark.csv\").option(\"header\", \"true\").save(\"29052971_B_4.csv\")
+val topTenWorstAirportsDf = sc.parallelize(topTenWorstAirports).toDF(\"OriginAirport\",\"AvgDepartureDelay\").coalesce(1).write.format(\"com.databricks.spark.csv\").option(\"header\", \"true\").save(\"/tmp/29052971/29052971_B_4.csv\")
 
 
 /* End Part B */
